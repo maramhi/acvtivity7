@@ -1,0 +1,612 @@
+<title>نشاط أساسيات CSS</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lalezar&family=Tajawal:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: a playful code-editor notebook — dotted paper, syntax colours (selector / property / value) carry the whole palette */
+:root{
+  --bg:#F5F9FF;
+  --dot:#D9E3F5;
+  --paper:#FFFFFF;
+  --ink:#1F2340;
+  --muted:#5D6487;
+  --line:#E2E8F5;
+  --sel:#E8407A;      /* selector pink */
+  --prop:#2A78E4;     /* property blue */
+  --val:#F07F14;      /* value orange */
+  --green:#1FA971;
+  --purple:#8657F0;
+  --teal:#0FA3B1;
+  --sun:#FFC83D;
+  --ok:#1FA971; --okbg:#E3F7EE;
+  --bad:#E5484D; --badbg:#FDE8E9;
+  --codebg:#1E2140; --codefg:#E9ECFF; --codepunc:#8F96C4;
+  --font-display:"Lalezar","Tajawal",system-ui,sans-serif;
+  --font-body:"Tajawal",system-ui,"Segoe UI",Tahoma,sans-serif;
+  --font-code:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14162B; --dot:#262A4A; --paper:#1D2040; --ink:#EEF0FF; --muted:#A5ABD3; --line:#30355E;
+    --sel:#FF6B9C; --prop:#5DA0FF; --val:#FFA24D; --green:#3DD598; --purple:#A784FF; --teal:#3CC9D6; --sun:#FFD460;
+    --ok:#3DD598; --okbg:#173A33; --bad:#FF6B6F; --badbg:#3E1E28;
+    --codebg:#0E1024; --codefg:#E9ECFF; --codepunc:#7D84B8;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14162B; --dot:#262A4A; --paper:#1D2040; --ink:#EEF0FF; --muted:#A5ABD3; --line:#30355E;
+  --sel:#FF6B9C; --prop:#5DA0FF; --val:#FFA24D; --green:#3DD598; --purple:#A784FF; --teal:#3CC9D6; --sun:#FFD460;
+  --ok:#3DD598; --okbg:#173A33; --bad:#FF6B6F; --badbg:#3E1E28;
+  --codebg:#0E1024; --codefg:#E9ECFF; --codepunc:#7D84B8;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{
+  background-color:var(--bg);
+  background-image:radial-gradient(var(--dot) 1.4px, transparent 1.4px);
+  background-size:22px 22px;
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:17px; line-height:1.7;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  padding-block:28px 56px;
+}
+.wrap{max-width:900px; margin:0 auto; display:flex; flex-direction:column; gap:30px}
+code,.code{font-family:var(--font-code)}
+
+/* ---------- hero ---------- */
+.hero{display:flex; flex-direction:column; gap:10px; align-items:flex-start}
+.tagline{font-family:var(--font-code); font-size:14px; color:var(--muted); direction:ltr; unicode-bidi:isolate}
+.tagline b{color:var(--sel)} .tagline i{color:var(--prop); font-style:normal} .tagline u{color:var(--val); text-decoration:none}
+h1{font-family:var(--font-display); font-weight:400; font-size:clamp(40px, 8vw, 66px); line-height:1.15; margin:0; text-wrap:balance}
+h1 .brace{font-family:var(--font-code); font-weight:700; color:var(--sel)}
+h1 .brace.r{color:var(--val)}
+h1 .css{color:var(--prop); font-family:var(--font-code); font-weight:700; letter-spacing:-.02em}
+.lede{margin:0; max-width:62ch; color:var(--muted); font-size:18px}
+.legend{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+.chip{display:inline-flex; align-items:center; gap:6px; padding:4px 12px 4px 14px; border-radius:999px; font-weight:700; font-size:15px; color:#fff}
+.chip.s{background:var(--sel)} .chip.p{background:var(--prop)} .chip.v{background:var(--val)}
+
+/* ---------- section ---------- */
+.task{background:var(--paper); border:2px solid var(--line); border-radius:22px; padding:22px; display:flex; flex-direction:column; gap:18px; position:relative}
+.task-head{display:flex; flex-wrap:wrap; align-items:center; gap:12px}
+.badge{font-family:var(--font-display); font-size:22px; color:#fff; width:46px; height:46px; border-radius:14px; display:grid; place-items:center; transform:rotate(-6deg); flex:none}
+.t1 .badge{background:var(--sel)} .t2 .badge{background:var(--prop)} .t3 .badge{background:var(--val)} .t4 .badge{background:var(--green)}
+.task h2{font-family:var(--font-display); font-weight:400; font-size:30px; margin:0; line-height:1.2}
+.t1 h2{color:var(--sel)} .t2 h2{color:var(--prop)} .t3 h2{color:var(--val)} .t4 h2{color:var(--green)}
+.task .how{flex-basis:100%; margin:0; color:var(--muted)}
+.sec-score{margin-inline-start:auto; font-weight:800; font-variant-numeric:tabular-nums; padding:4px 14px; border-radius:999px; background:var(--bg); border:2px dashed var(--line)}
+.sec-score[hidden]{display:none!important}
+
+/* ---------- 1: matching ---------- */
+.match{display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:12px 18px}
+.col{display:flex; flex-direction:column; gap:10px; min-width:0}
+.col-title{font-weight:800; font-size:14px; letter-spacing:.04em; color:var(--muted)}
+.mitem{
+  font:inherit; color:var(--ink); text-align:start; cursor:pointer;
+  background:var(--bg); border:2px solid var(--line); border-radius:14px; padding:10px 12px;
+  display:flex; align-items:center; gap:10px; min-height:58px; transition:transform .15s, border-color .15s, background .15s;
+}
+.mitem:hover{transform:translateY(-2px)}
+.mitem:focus-visible,.tok:focus-visible,.brush:focus-visible,.btn:focus-visible,.opt input:focus-visible+span{outline:3px solid var(--sun); outline-offset:2px}
+.mitem.term .code{direction:ltr; unicode-bidi:isolate; font-weight:700; font-size:15px; word-break:break-word}
+.mitem .dot{width:22px; height:22px; border-radius:50%; flex:none; border:2px dashed var(--line); display:grid; place-items:center; font-size:12px; font-weight:800; color:#fff}
+.mitem.picked{border-style:dashed; border-color:var(--ink); background:var(--paper)}
+.mitem[data-pair] .dot{border:none; background:var(--pc)}
+.mitem[data-pair]{border-color:var(--pc); background:var(--paper)}
+@supports (background:color-mix(in srgb, red 10%, white)){.mitem[data-pair]{background:color-mix(in srgb, var(--pc) 12%, var(--paper))}}
+.mitem.right{box-shadow:0 0 0 3px var(--ok) inset}
+.mitem.wrong{box-shadow:0 0 0 3px var(--bad) inset}
+.mitem .mark{margin-inline-start:auto; font-weight:800}
+
+/* ---------- 1: sort pictures ---------- */
+.pics{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr)); gap:16px}
+.pair{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px; padding:10px; border-radius:22px; border:2px dashed var(--line)}
+.pic{border:2px solid var(--line); border-radius:18px; background:var(--bg); padding:10px; display:flex; flex-direction:column; gap:8px; min-width:0; transition:box-shadow .15s}
+.pic svg{width:100%; height:auto; display:block; background:var(--paper); border-radius:12px}
+.pic .cap{font-weight:700; text-align:center; line-height:1.4; min-height:2.8em; display:grid; place-items:center}
+.pic .pick{display:grid; grid-template-columns:1fr 1fr; gap:8px; direction:ltr}
+.pick button{font-family:var(--font-code); font-weight:700; font-size:15px; cursor:pointer; border-radius:12px; padding:7px 0; border:2px solid var(--line); background:var(--paper); color:var(--ink); transition:transform .12s}
+.pick button:hover{transform:translateY(-2px)}
+.pick button:focus-visible{outline:3px solid var(--sun); outline-offset:2px}
+.pick button[data-v="html"][aria-pressed="true"]{background:var(--val); border-color:var(--val); color:#fff}
+.pick button[data-v="css"][aria-pressed="true"]{background:var(--prop); border-color:var(--prop); color:#fff}
+.pic.right{box-shadow:0 0 0 3px var(--ok)}
+.pic.wrong{box-shadow:0 0 0 3px var(--bad)}
+.pic .why{font-size:14px; text-align:center; margin:0; font-weight:700}
+.pic.right .why{color:var(--ok)} .pic.wrong .why{color:var(--bad)}
+/* svg drawing classes */
+.k{fill:none; stroke:var(--muted); stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round}
+.kd{fill:none; stroke:var(--muted); stroke-width:1.6; stroke-dasharray:4 4; stroke-linecap:round}
+.ink{fill:var(--ink)} .inks{stroke:var(--ink); stroke-width:2; fill:none}
+.f-sel{fill:var(--sel)} .f-prop{fill:var(--prop)} .f-val{fill:var(--val)} .f-green{fill:var(--green)} .f-sun{fill:var(--sun)} .f-purple{fill:var(--purple)} .f-teal{fill:var(--teal)} .f-paper{fill:var(--paper)} .f-line{fill:var(--line)} .f-bg{fill:var(--bg)}
+.t-plain{font-family:"Times New Roman",serif; fill:var(--ink); font-size:11px}
+.t-link{font-family:"Times New Roman",serif; fill:#1a4fd6; font-size:10px; text-decoration:underline}
+.t-white{font-family:var(--font-body); fill:#fff; font-weight:800; font-size:11px}
+
+/* ---------- 2: dissect ---------- */
+.brushes{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+.brushes .lbl{font-weight:700; color:var(--muted)}
+.brush{font:inherit; font-weight:800; cursor:pointer; border-radius:999px; padding:6px 16px; border:3px solid transparent; color:#fff; transition:transform .15s}
+.brush[data-b="s"]{background:var(--sel)} .brush[data-b="p"]{background:var(--prop)} .brush[data-b="v"]{background:var(--val)}
+.brush[data-b="x"]{background:var(--paper); color:var(--ink); border-color:var(--line)}
+.brush[aria-pressed="true"]{transform:scale(1.08); border-color:var(--ink); box-shadow:0 4px 0 var(--ink)}
+.snips{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px}
+.snip{display:flex; flex-direction:column; gap:6px; min-width:0}
+.snip .num{font-weight:800; color:var(--muted); font-size:14px}
+.codebox{background:var(--codebg); color:var(--codefg); border-radius:14px; padding:16px; direction:ltr; text-align:left; font-family:var(--font-code); font-size:16px; line-height:2.4; overflow-x:auto; white-space:pre}
+.punc{color:var(--codepunc)}
+.tok{font:inherit; color:var(--codefg); background:transparent; border:2px dashed var(--codepunc); border-radius:8px; padding:1px 6px; cursor:pointer; transition:background .15s}
+.tok:hover{border-color:var(--sun)}
+.tok[data-paint="s"]{background:var(--sel); border:2px solid var(--sel); color:#fff}
+.tok[data-paint="p"]{background:var(--prop); border:2px solid var(--prop); color:#fff}
+.tok[data-paint="v"]{background:var(--val); border:2px solid var(--val); color:#fff}
+.tok.right{outline:3px solid var(--ok); outline-offset:2px}
+.tok.wrong{outline:3px solid var(--bad); outline-offset:2px; animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+
+/* ---------- 3: find the bug ---------- */
+.bugs{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px}
+.bug{border:2px solid var(--line); border-radius:18px; padding:14px; display:flex; flex-direction:column; gap:10px; min-width:0; background:var(--bg)}
+.bug .file{display:flex; justify-content:space-between; align-items:center; gap:8px; font-weight:800; font-size:14px; color:var(--muted)}
+.bug .file code{direction:ltr; font-size:13px; background:var(--paper); border:1px solid var(--line); padding:1px 8px; border-radius:6px}
+.bug .codebox{line-height:1.8; font-size:14.5px}
+.bug .q{margin:0; font-weight:700}
+.opts{display:flex; flex-direction:column; gap:6px}
+.opt{display:flex; gap:8px; align-items:flex-start; cursor:pointer; padding:7px 10px; border-radius:12px; border:2px solid transparent; background:var(--paper)}
+.opt input{margin-top:6px; accent-color:var(--val); flex:none}
+.opt.right{border-color:var(--ok); background:var(--okbg)}
+.opt.wrong{border-color:var(--bad); background:var(--badbg)}
+.fix{display:flex; flex-direction:column; gap:6px; padding:10px; border-radius:12px; background:var(--okbg); border:2px solid var(--ok)}
+.fix p{margin:0; font-size:15px}
+.fix .codebox{background:var(--codebg); font-size:13.5px; padding:10px 12px}
+.hl{color:var(--sun); font-weight:700}
+
+/* ---------- 4: shorten ---------- */
+.shorts{display:flex; flex-direction:column; gap:16px}
+.short{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px; border:2px solid var(--line); border-radius:18px; padding:14px; background:var(--bg)}
+.short .head{grid-column:1/-1; display:flex; justify-content:space-between; gap:8px; font-weight:800; font-size:14px; color:var(--muted)}
+.short .side{display:flex; flex-direction:column; gap:6px; min-width:0}
+.short .side span{font-weight:700; font-size:14px; color:var(--muted)}
+.short .codebox{line-height:1.8; font-size:14.5px; height:100%}
+.short textarea{font-family:var(--font-code); font-size:14.5px; line-height:1.8; direction:ltr; text-align:left; width:100%; min-height:120px; height:100%; resize:vertical; border-radius:14px; border:2px dashed var(--green); background:var(--paper); color:var(--ink); padding:12px 14px}
+.short textarea:focus-visible{outline:3px solid var(--sun); outline-offset:2px}
+.short textarea.right{border:3px solid var(--ok); background:var(--okbg)}
+.short textarea.wrong{border:3px solid var(--bad); background:var(--badbg)}
+.short .fix{grid-column:1/-1}
+.key-note{display:inline-block; background:var(--sun); color:#1F2340; font-weight:800; padding:4px 14px; border-radius:999px; transform:rotate(-2deg)}
+
+/* ---------- footer ---------- */
+.actions{display:flex; flex-wrap:wrap; gap:12px; justify-content:center}
+.btn{font:inherit; font-weight:800; font-size:18px; cursor:pointer; border-radius:16px; padding:12px 26px; border:3px solid var(--ink); transition:transform .12s, box-shadow .12s}
+.btn.primary{background:var(--sun); color:#1F2340; box-shadow:0 5px 0 var(--ink)}
+.btn.primary:active{transform:translateY(4px); box-shadow:0 1px 0 var(--ink)}
+.btn.ghost{background:var(--paper); color:var(--ink)}
+.result{text-align:center; display:flex; flex-direction:column; align-items:center; gap:4px; padding:18px; border-radius:22px; background:var(--paper); border:3px dashed var(--sun)}
+.result .big{font-family:var(--font-display); font-size:46px; line-height:1.1; font-variant-numeric:tabular-nums}
+.result .msg{font-weight:700; color:var(--muted)}
+.foot{text-align:center; color:var(--muted); font-size:14px; margin:0}
+canvas#confetti{position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:50}
+
+@media (max-width:640px){
+  .snips,.bugs,.short{grid-template-columns:minmax(0,1fr)}
+  .match{grid-template-columns:minmax(0,1fr) minmax(0,1.3fr); gap:10px}
+  .task{padding:16px}
+  .mitem{font-size:15px; padding:8px 10px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header class="hero">
+    <span class="tagline"><b>activity</b> { <i>lecture</i> : <u>7</u>; }</span>
+    <h1>نشاط <span class="brace">{</span> <span class="css">CSS</span> <span class="brace r">}</span></h1>
+    <p class="lede" hidden></p>
+    <div class="legend" aria-label="ألوان أجزاء جملة CSS">
+      <span class="chip s">المحدد selector</span>
+      <span class="chip p">الخاصية property</span>
+      <span class="chip v">القيمة value</span>
+    </div>
+  </header>
+
+  <!-- 1 -->
+  <section class="task t1" aria-labelledby="h1t">
+    <div class="task-head">
+      <span class="badge">١</span>
+      <h2 id="h1t">هيكل أو تزيين؟</h2>
+      <span class="sec-score" id="score1" hidden></span>
+      <p class="how">تذكّري: HTML هو الهيكل، و CSS هو الطلاء والتزيين. تأملي كل صورة واختاري: هل تمثل HTML أو CSS؟</p>
+    </div>
+    <div class="pics" id="pics"></div>
+  </section>
+
+  <!-- 2 -->
+  <section class="task t2" aria-labelledby="h2t">
+    <div class="task-head">
+      <span class="badge">٢</span>
+      <h2 id="h2t">فكّكي الجملة</h2>
+      <span class="sec-score" id="score2" hidden></span>
+      <p class="how">اختاري لونًا ثم اضغطي على كل جزء في الكود لتلوينه: المحدد بالوردي، الخاصية بالأزرق، القيمة بالبرتقالي.</p>
+    </div>
+    <div class="brushes" role="group" aria-label="اختيار اللون">
+      <span class="lbl">ألواني:</span>
+      <button class="brush" data-b="s" aria-pressed="true">المحدد</button>
+      <button class="brush" data-b="p" aria-pressed="false">الخاصية</button>
+      <button class="brush" data-b="v" aria-pressed="false">القيمة</button>
+      <button class="brush" data-b="x" aria-pressed="false">ممحاة</button>
+    </div>
+    <div class="snips" id="snips"></div>
+  </section>
+
+  <!-- 3 -->
+  <section class="task t3" aria-labelledby="h3t">
+    <div class="task-head">
+      <span class="badge">٣</span>
+      <h2 id="h3t">اكتشفي الخطأ</h2>
+      <span class="sec-score" id="score3" hidden></span>
+      <p class="how">في كل كود خطأ واحد. اقرئي الكود جيدًا واختاري وصف الخطأ الصحيح.</p>
+    </div>
+    <div class="bugs" id="bugs"></div>
+  </section>
+
+  <!-- 4 -->
+  <section class="task t4" aria-labelledby="h4t">
+    <div class="task-head">
+      <span class="badge">٤</span>
+      <h2 id="h4t">اختصري الكود</h2>
+      <span class="sec-score" id="score4" hidden></span>
+      <p class="how">أعيدي كتابة كل كود في جملة CSS واحدة تعطي نفس النتيجة. استخدمي الفاصلة بين المحددات، أو اجمعي الخصائص داخل نفس الأقواس.</p>
+    </div>
+    <div class="shorts" id="shorts"></div>
+  </section>
+
+  <div class="actions">
+    <button class="btn primary" id="checkBtn">تحقّقي من إجاباتي</button>
+    <button class="btn ghost" id="againBtn">إعادة المحاولة</button>
+  </div>
+
+  <div class="result" id="result" hidden>
+    <span class="big" id="total"></span>
+    <span class="msg" id="msg"></span>
+  </div>
+
+  <p class="foot">نشاط — المحاضرة السابعة: صفحات الأنماط الانسيابية CSS · م. مرام الشمري</p>
+</div>
+<canvas id="confetti" hidden></canvas>
+<noscript><p style="text-align:center;font-size:20px;padding:20px">الأسئلة تحتاج تشغيل JavaScript. افتحي الصفحة في متصفح مثل Chrome.</p></noscript>
+
+<script>
+(function(){
+  const KEY = false;
+  const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const shuffle = a => { a = a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; };
+
+  /* ===== 1. sort pictures ===== */
+  const SVG = {
+    carFrame:`<svg viewBox="0 0 160 100" aria-hidden="true">
+      <path class="k" d="M18 66 L142 66 M30 66 L40 46 L70 40 L92 40 L112 52 L138 56 L142 66"/>
+      <path class="kd" d="M40 46 L112 52 M70 40 L70 66 M92 40 L92 66"/>
+      <circle class="k" cx="46" cy="70" r="12"/><circle class="k" cx="116" cy="70" r="12"/>
+      <path class="k" d="M46 70 L116 70"/></svg>`,
+    carPaint:`<svg viewBox="0 0 160 100" aria-hidden="true">
+      <path class="f-sel" d="M16 68 L18 56 Q22 50 34 48 L46 34 Q52 28 64 28 L94 28 Q104 28 112 38 L120 48 Q140 50 144 58 L144 68 Z"/>
+      <path class="f-prop" d="M52 36 Q56 32 64 32 L76 32 L76 46 L46 46 Z M82 32 L94 32 Q100 32 106 40 L110 46 L82 46 Z"/>
+      <rect class="f-sun" x="134" y="54" width="8" height="5" rx="2"/>
+      <circle class="ink" cx="46" cy="70" r="13"/><circle class="f-line" cx="46" cy="70" r="5"/>
+      <circle class="ink" cx="116" cy="70" r="13"/><circle class="f-line" cx="116" cy="70" r="5"/>
+      <path class="inks" d="M28 86 L136 86" stroke-dasharray="2 6" opacity=".4"/></svg>`,
+    houseFrame:`<svg viewBox="0 0 160 100" aria-hidden="true">
+      <path class="k" d="M40 46 L80 18 L120 46 M46 42 L46 88 L114 88 L114 42"/>
+      <path class="kd" d="M46 42 L114 88 M114 42 L46 88 M80 18 L80 88 M46 64 L114 64"/>
+      <path class="k" d="M30 88 L130 88"/></svg>`,
+    housePaint:`<svg viewBox="0 0 160 100" aria-hidden="true">
+      <rect class="f-sun" x="46" y="44" width="68" height="44" rx="2"/>
+      <path class="f-val" d="M36 48 L80 16 L124 48 Z"/>
+      <rect class="f-prop" x="72" y="62" width="16" height="26" rx="8"/>
+      <rect class="f-paper" x="52" y="54" width="14" height="14" rx="2"/><rect class="f-paper" x="94" y="54" width="14" height="14" rx="2"/>
+      <path class="inks" d="M59 54 L59 68 M52 61 L66 61 M101 54 L101 68 M94 61 L108 61" stroke-width="1.5"/>
+      <rect class="f-green" x="24" y="86" width="112" height="6" rx="3"/>
+      <circle class="f-sel" cx="34" cy="82" r="4"/><circle class="f-purple" cx="126" cy="82" r="4"/><circle class="f-sel" cx="134" cy="84" r="3"/></svg>`,
+    sketch:`<svg viewBox="0 0 160 100" aria-hidden="true">
+      <circle class="kd" cx="128" cy="24" r="12"/>
+      <path class="k" d="M70 90 Q72 66 72 52" stroke-width="1.6"/>
+      <circle class="k" cx="72" cy="40" r="7" stroke-width="1.6"/>
+      <ellipse class="k" cx="72" cy="26" rx="6" ry="8" stroke-width="1.6"/><ellipse class="k" cx="72" cy="54" rx="6" ry="8" stroke-width="1.6"/>
+      <ellipse class="k" cx="58" cy="40" rx="8" ry="6" stroke-width="1.6"/><ellipse class="k" cx="86" cy="40" rx="8" ry="6" stroke-width="1.6"/>
+      <path class="k" d="M71 74 Q58 66 54 72 Q60 78 71 76" stroke-width="1.6"/>
+      <path class="kd" d="M18 90 L142 90"/></svg>`,
+    painting:`<svg viewBox="0 0 160 100" aria-hidden="true">
+      <rect class="f-bg" x="0" y="0" width="160" height="100"/>
+      <circle class="f-sun" cx="128" cy="24" r="13"/>
+      <rect class="f-green" x="0" y="86" width="160" height="14"/>
+      <path d="M70 90 Q72 66 72 52" stroke="var(--green)" stroke-width="4" fill="none"/>
+      <path class="f-green" d="M71 74 Q58 64 52 72 Q60 80 71 76 Z"/>
+      <ellipse class="f-sel" cx="72" cy="26" rx="7" ry="9"/><ellipse class="f-sel" cx="72" cy="54" rx="7" ry="9"/>
+      <ellipse class="f-sel" cx="58" cy="40" rx="9" ry="7"/><ellipse class="f-sel" cx="86" cy="40" rx="9" ry="7"/>
+      <circle class="f-val" cx="72" cy="40" r="8"/>
+      <circle class="f-purple" cx="30" cy="80" r="5"/><circle class="f-prop" cx="118" cy="80" r="5"/></svg>`,
+    cakePlain:`<svg viewBox="0 0 160 100" aria-hidden="true">
+      <path class="k" d="M44 56 L44 84 Q80 96 116 84 L116 56"/>
+      <ellipse class="k" cx="80" cy="56" rx="36" ry="10"/>
+      <path class="k" d="M30 88 Q80 104 130 88"/></svg>`,
+    cakeDeco:`<svg viewBox="0 0 160 100" aria-hidden="true">
+      <path class="f-sun" d="M44 56 L44 84 Q80 96 116 84 L116 56 Z"/>
+      <path class="f-sel" d="M44 56 L44 68 Q50 74 54 66 Q60 76 66 66 Q72 76 78 68 Q84 78 90 68 Q96 76 102 66 Q108 74 116 66 L116 56 Z"/>
+      <ellipse class="f-sel" cx="80" cy="56" rx="36" ry="10"/>
+      <rect class="f-prop" x="64" y="32" width="5" height="20" rx="2"/><rect class="f-green" x="78" y="30" width="5" height="22" rx="2"/><rect class="f-purple" x="92" y="32" width="5" height="20" rx="2"/>
+      <ellipse class="f-val" cx="66.5" cy="28" rx="3" ry="5"/><ellipse class="f-val" cx="80.5" cy="26" rx="3" ry="5"/><ellipse class="f-val" cx="94.5" cy="28" rx="3" ry="5"/>
+      <circle class="f-teal" cx="56" cy="80" r="2.5"/><circle class="f-prop" cx="74" cy="84" r="2.5"/><circle class="f-purple" cx="94" cy="82" r="2.5"/><circle class="f-green" cx="106" cy="78" r="2.5"/>
+      <path d="M30 90 Q80 104 130 90" stroke="var(--line)" stroke-width="4" fill="none"/></svg>`,
+    webPlain:`<svg viewBox="0 0 160 100" aria-hidden="true">
+      <rect class="k" x="8" y="6" width="144" height="88" rx="4"/><path class="k" d="M8 18 L152 18"/>
+      <text class="t-plain" x="148" y="34" text-anchor="end" font-weight="700" font-size="13">متجر الورد</text>
+      <text class="t-plain" x="148" y="50" text-anchor="end">أجمل الورود بأسعار مناسبة.</text>
+      <text class="t-link" x="148" y="64" text-anchor="end">اطلبي الآن</text>
+      <text class="t-plain" x="148" y="80" text-anchor="end">• ورد أحمر  • ورد أبيض</text></svg>`,
+    webStyled:`<svg viewBox="0 0 160 100" aria-hidden="true">
+      <rect class="f-bg" x="8" y="6" width="144" height="88" rx="6"/>
+      <rect class="f-purple" x="8" y="6" width="144" height="22" rx="6"/><rect class="f-purple" x="8" y="18" width="144" height="10"/>
+      <text class="t-white" x="146" y="21" text-anchor="end">متجر الورد</text>
+      <rect class="f-paper" x="84" y="36" width="60" height="48" rx="8"/><circle class="f-sel" cx="114" cy="54" r="9"/>
+      <rect class="f-line" x="94" y="70" width="40" height="5" rx="2.5"/>
+      <rect class="f-paper" x="16" y="36" width="60" height="48" rx="8"/><circle class="f-sun" cx="46" cy="54" r="9"/>
+      <rect class="f-val" x="26" y="68" width="40" height="11" rx="5.5"/>
+      <text class="t-white" x="46" y="76.5" text-anchor="middle" font-size="7">اطلبي الآن</text></svg>`,
+  };
+  const pics = [
+    { id:"carFrame",   cap:"هيكل السيارة فقط",          a:"html", why:"الهيكل الأساسي = HTML" },
+    { id:"carPaint",   cap:"سيارة مطلية وملونة",         a:"css",  why:"الطلاء والتزيين = CSS" },
+    { id:"houseFrame", cap:"هيكل البيت قبل الدهان",       a:"html", why:"البناء والجدران = HTML" },
+    { id:"housePaint", cap:"بيت مدهون ومزيّن",           a:"css",  why:"الألوان والزينة = CSS" },
+    { id:"sketch",     cap:"رسم بقلم الرصاص",            a:"html", why:"تحديد أماكن العناصر = HTML" },
+    { id:"painting",   cap:"نفس الرسمة بعد التلوين",      a:"css",  why:"التلوين والتحبير = CSS" },
+    { id:"cakePlain",  cap:"كيكة سادة بدون تزيين",        a:"html", why:"الكيكة نفسها = HTML" },
+    { id:"cakeDeco",   cap:"كيكة بالكريمة والشموع",       a:"css",  why:"التزيين = CSS" },
+    { id:"webPlain",   cap:"صفحة ويب بدون تنسيق",         a:"html", why:"المحتوى والهيكل = HTML" },
+    { id:"webStyled",  cap:"نفس الصفحة بعد التنسيق",      a:"css",  why:"الألوان والخطوط والشكل = CSS" },
+  ];
+  const picsBox=document.getElementById("pics");
+  function buildMatch(){
+    picsBox.innerHTML="";
+    let row=null;
+    pics.forEach((q,i)=>{
+      if(i%2===0){ row=document.createElement("div"); row.className="pair"; picsBox.appendChild(row); }
+      const c=document.createElement("div"); c.className="pic"; c.dataset.id=q.id;
+      c.innerHTML=SVG[q.id]+`<div class="cap">${q.cap}</div>
+        <div class="pick" role="group" aria-label="${q.cap}">
+          <button type="button" data-v="html" aria-pressed="false">HTML</button>
+          <button type="button" data-v="css" aria-pressed="false">CSS</button>
+        </div><p class="why" hidden></p>`;
+      c.querySelectorAll(".pick button").forEach(b=>b.addEventListener("click",()=>{
+        c.querySelectorAll(".pick button").forEach(x=>x.setAttribute("aria-pressed", x===b?"true":"false"));
+        c.dataset.ans=b.dataset.v; c.classList.remove("right","wrong"); c.querySelector(".why").hidden=true;
+      }));
+      if(i%2===1 && Math.random()<.5) row.insertBefore(c,row.firstChild); else row.appendChild(c);
+    });
+  }
+  function check1(){
+    let s=0;
+    pics.forEach(q=>{
+      const c=picsBox.querySelector(`.pic[data-id="${q.id}"]`), ok=c.dataset.ans===q.a;
+      if(ok) s++;
+      c.classList.remove("right","wrong"); c.classList.add(ok?"right":"wrong");
+      const w=c.querySelector(".why"); w.hidden=false; w.textContent=(ok?"✓ ":"✗ ")+q.why;
+    });
+    return [s,pics.length];
+  }
+
+  /* ===== 2. dissect ===== */
+  const snippets = [
+    [["h1","s"],[" { "],["font-size","p"],[" : "],["20px","v"],["; }"]],
+    [["body","s"],[" { "],["background-color","p"],[" : "],["yellow","v"],["; }"]],
+    [["h2","s"],[", "],["p","s"],[" { "],["color","p"],[" : "],["purple","v"],["; }"]],
+    [["p","s"],[" {\n  "],["color","p"],[" : "],["green","v"],[";\n  "],["font-size","p"],[" : "],["18px","v"],[";\n}"]],
+  ];
+  /* mix the colour buttons so they never follow the sentence order */
+  (function(){
+    const grp=document.querySelector(".brushes"), eraser=grp.querySelector('.brush[data-b="x"]');
+    const bs=Array.from(grp.querySelectorAll('.brush:not([data-b="x"])'));
+    const orders=[["v","s","p"],["p","v","s"],["v","p","s"],["p","s","v"],["s","v","p"]];
+    const ord=KEY?orders[0]:orders[Math.floor(Math.random()*orders.length)];
+    ord.forEach(k=>grp.insertBefore(bs.find(b=>b.dataset.b===k),eraser));
+    grp.querySelectorAll(".brush").forEach(b=>b.setAttribute("aria-pressed","false"));
+    grp.querySelector(`.brush[data-b="${ord[0]}"]`).setAttribute("aria-pressed","true");
+    window.__firstBrush=ord[0];
+  })();
+  let brush=window.__firstBrush;
+  document.querySelectorAll(".brush").forEach(b=>b.addEventListener("click",()=>{
+    brush=b.dataset.b;
+    document.querySelectorAll(".brush").forEach(x=>x.setAttribute("aria-pressed", x===b?"true":"false"));
+  }));
+  const snipsBox=document.getElementById("snips");
+  function buildSnips(){
+    snipsBox.innerHTML="";
+    snippets.forEach((sn,i)=>{
+      const wrap=document.createElement("div"); wrap.className="snip";
+      const box=document.createElement("div"); box.className="codebox";
+      sn.forEach(([txt,role])=>{
+        if(role){
+          const t=document.createElement("button"); t.type="button"; t.className="tok"; t.textContent=txt; t.dataset.role=role;
+          t.addEventListener("click",()=>{ t.classList.remove("right","wrong"); if(brush==="x") t.removeAttribute("data-paint"); else t.dataset.paint=brush; });
+          box.appendChild(t);
+        } else {
+          const s=document.createElement("span"); s.className="punc"; s.textContent=txt; box.appendChild(s);
+        }
+      });
+      wrap.innerHTML=`<span class="num">الجملة ${["الأولى","الثانية","الثالثة","الرابعة"][i]}</span>`;
+      wrap.appendChild(box); snipsBox.appendChild(wrap);
+    });
+  }
+  function check2(){
+    let s=0; const toks=snipsBox.querySelectorAll(".tok");
+    toks.forEach(t=>{ t.classList.remove("right","wrong"); void t.offsetWidth; const ok=t.dataset.paint===t.dataset.role; if(ok) s++; t.classList.add(ok?"right":"wrong"); });
+    return [s,toks.length];
+  }
+
+  /* ===== 3. find the bug ===== */
+  const bugs = [
+    { file:"style.css", code:"p { color green; }",
+      opts:["تنقص النقطتان : بين الخاصية والقيمة","المحدد p غير صحيح","القيمة يجب أن تكون رقمًا"], c:0,
+      fix:'p { color <span class="hl">:</span> green; }', why:"الخاصية والقيمة يفصل بينهما النقطتان دائمًا." },
+    { file:"index.html", code:'<html>\n<head>\n  <link rel="stylesheet" href="style.html">\n</head>\n<body>\n  <h1> Hello </h1>\n</body>\n</html>',
+      opts:["اسم ملف CSS يجب أن ينتهي بالامتداد .css","الوسم <link> يجب أن يُكتب داخل <body>","الخاصية rel غير مطلوبة"], c:0,
+      fix:'&lt;link rel="stylesheet" href="<span class="hl">style.css</span>"&gt;', why:"ملف التنسيق الخارجي امتداده .css، والخاصية href تحدد اسمه." },
+    { file:"style.css", code:"<!-- تنسيق العناوين -->\nh1 { color : red; }",
+      opts:["اللون red غير مسموح","يجب كتابة h1 بحروف كبيرة","الملاحظة في CSS تُكتب بين /* و */ وليس <!-- -->"], c:2,
+      fix:'<span class="hl">/* تنسيق العناوين */</span>\nh1 { color : red; }', why:"&lt;!-- --&gt; ملاحظة في HTML، أما في CSS فنستخدم /* */." },
+    { file:"style.css", code:"h1, h2 p { color : blue; }",
+      opts:["لا يجوز تنسيق أكثر من محدد معًا","تنقص فاصلة بين المحددين h2 و p","يجب كتابة الخاصية قبل المحدد"], c:1,
+      fix:'h1, h2<span class="hl">,</span> p { color : blue; }', why:"عند مناداة أكثر من محدد نفصل بينها بفاصلة." },
+    { file:"style.css", code:"h1 < color : blue; >",
+      opts:["تنقص النقطتان : بين الخاصية والقيمة","استُخدمت أقواس HTML < > بدل الأقواس المعقوفة { }","يجب كتابة h1 بين علامتي تنصيص"], c:1,
+      fix:'h1 <span class="hl">{</span> color : blue; <span class="hl">}</span>', why:"الخصائص في CSS تُكتب داخل الأقواس المعقوفة { }، أما &lt; &gt; فهي لوسوم HTML." },
+  ];
+  const bugsBox=document.getElementById("bugs");
+  function buildBugs(){
+    bugsBox.innerHTML="";
+    bugs.forEach((b,i)=>{
+      const card=document.createElement("div"); card.className="bug"; card.dataset.i=i;
+      card.innerHTML=`
+        <div class="file"><span>الكود ${i+1}</span><code>${b.file}</code></div>
+        <div class="codebox">${esc(b.code)}</div>
+        <p class="q">أين الخطأ؟</p>
+        <div class="opts">${b.opts.map((o,j)=>`
+          <label class="opt"><input type="radio" name="bug${i}" id="bug${i}o${j}" value="${j}"><span>${esc(o)}</span></label>`).join("")}
+        </div>
+        <div class="fix" hidden><p><b>التصحيح:</b> ${b.why}</p><div class="codebox">${b.fix}</div></div>`;
+      card.querySelectorAll("input").forEach(inp=>inp.addEventListener("change",()=>{
+        card.querySelectorAll(".opt").forEach(o=>o.classList.remove("right","wrong")); card.querySelector(".fix").hidden=true;
+      }));
+      bugsBox.appendChild(card);
+    });
+  }
+  function check3(){
+    let s=0;
+    bugs.forEach((b,i)=>{
+      const card=bugsBox.querySelector(`.bug[data-i="${i}"]`);
+      const sel=card.querySelector("input:checked");
+      card.querySelectorAll(".opt").forEach(o=>o.classList.remove("right","wrong"));
+      const labels=card.querySelectorAll(".opt");
+      labels[b.c].classList.add("right");
+      if(sel && +sel.value===b.c) s++;
+      else if(sel) sel.closest(".opt").classList.add("wrong");
+      card.querySelector(".fix").hidden=false;
+    });
+    return [s,bugs.length];
+  }
+
+  /* ===== 4. shorten ===== */
+  const shorts = [
+    { code:"h1 { color : blue; }\nh2 { color : blue; }\np  { color : blue; }",
+      answer:"h1, h2, p { color : blue; }", why:"نفس التنسيق لثلاث محددات، فنكتبها معًا ونفصل بينها بفاصلة." },
+    { code:"p { color : red; }\np { font-size : 20px; }",
+      answer:"p { color : red; font-size : 20px; }", why:"نفس المحدد، فنجمع الخاصيتين داخل نفس الأقواس ونفصل بينهما بفاصلة منقوطة." },
+    { code:"h1 { color : purple; font-size : 24px; }\nh2 { color : purple; font-size : 24px; }",
+      answer:"h1, h2 { color : purple; font-size : 24px; }", why:"المحددان لهما نفس الخاصيتين ونفس القيم، فنكتبهما مرة واحدة مع فاصلة بينهما." },
+  ];
+  function sig(css){
+    css=css.replace(/\/\*[\s\S]*?\*\//g,"");
+    const rules=[]; const re=/([^{}]+)\{([^{}]*)\}/g; let m;
+    while((m=re.exec(css))){
+      const sels=m[1].split(",").map(x=>x.trim().toLowerCase()).filter(Boolean).sort();
+      const decls=m[2].split(";").map(d=>d.split(":")).filter(d=>d.length===2 && d[0].trim() && d[1].trim())
+        .map(d=>d[0].trim().toLowerCase()+":"+d[1].trim().toLowerCase().replace(/\s+/g," ")).sort();
+      rules.push(sels.join(",")+"{"+decls.join(";")+"}");
+    }
+    const leftover=css.replace(re,"").trim();
+    return leftover ? "BAD" : rules.join("|");
+  }
+  const shortsBox=document.getElementById("shorts");
+  function buildShorts(){
+    shortsBox.innerHTML="";
+    shorts.forEach((q,i)=>{
+      const d=document.createElement("div"); d.className="short"; d.dataset.i=i;
+      d.innerHTML=`
+        <div class="head"><span>الكود ${i+1}</span><span>style.css</span></div>
+        <div class="side"><span>الكود الطويل</span><div class="codebox">${esc(q.code)}</div></div>
+        <div class="side"><label for="short${i}"><span>اكتبيه مختصرًا هنا</span></label><textarea id="short${i}" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="selector { property : value; }"></textarea></div>
+        <div class="fix" hidden><p><b>الإجابة:</b> ${q.why}</p><div class="codebox">${esc(q.answer)}</div></div>`;
+      d.querySelector("textarea").addEventListener("input",e=>{e.target.classList.remove("right","wrong"); d.querySelector(".fix").hidden=true;});
+      shortsBox.appendChild(d);
+    });
+  }
+  function check4(){
+    let s=0;
+    shorts.forEach((q,i)=>{
+      const d=shortsBox.querySelector(`.short[data-i="${i}"]`), ta=d.querySelector("textarea");
+      const v=ta.value.trim();
+      const ok = v!=="" && sig(v)===sig(q.answer) && !sig(v).includes("|");
+      if(ok) s++;
+      ta.classList.remove("right","wrong"); ta.classList.add(ok?"right":"wrong");
+      d.querySelector(".fix").hidden=false;
+    });
+    return [s,shorts.length];
+  }
+
+  /* ===== totals ===== */
+  const result=document.getElementById("result");
+  function setSec(id,[s,t]){ const el=document.getElementById(id); el.hidden=false; el.textContent=`${s} / ${t}`; }
+  document.getElementById("checkBtn").addEventListener("click",()=>{
+    const r1=check1(), r2=check2(), r3=check3(), r4=check4();
+    setSec("score1",r1); setSec("score2",r2); setSec("score3",r3); setSec("score4",r4);
+    const s=r1[0]+r2[0]+r3[0]+r4[0], t=r1[1]+r2[1]+r3[1]+r4[1];
+    document.getElementById("total").textContent=`${s} / ${t}`;
+    const pct=s/t;
+    document.getElementById("msg").textContent =
+      pct===1 ? "ممتازة! كل إجاباتك صحيحة 🎉" :
+      pct>=.75 ? "رائع جدًا! راجعي الإجابات المعلّمة بالأحمر." :
+      pct>=.5 ? "جيد، راجعي الأجزاء الخاطئة وحاولي مرة ثانية." :
+      "راجعي شرائح المحاضرة ثم أعيدي المحاولة.";
+    result.hidden=false;
+    result.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto":"smooth", block:"center"});
+    if(pct===1 && !KEY) confetti();
+  });
+  document.getElementById("againBtn").addEventListener("click",()=>{
+    buildMatch(); buildSnips(); buildBugs(); buildShorts();
+    ["score1","score2","score3","score4"].forEach(id=>document.getElementById(id).hidden=true);
+    result.hidden=true; window.scrollTo({top:0});
+  });
+
+  /* ===== confetti ===== */
+  function confetti(){
+    if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const cv=document.getElementById("confetti"); cv.hidden=false;
+    const ctx=cv.getContext("2d"); const W=cv.width=innerWidth, H=cv.height=innerHeight;
+    const cs=getComputedStyle(document.documentElement);
+    const cols=["--sel","--prop","--val","--green","--purple","--sun"].map(v=>cs.getPropertyValue(v).trim());
+    const glyphs=["{","}",";",":"];
+    const ps=Array.from({length:110},()=>({x:Math.random()*W,y:-20-Math.random()*H*.5,vy:2+Math.random()*3,vx:-1.5+Math.random()*3,r:Math.random()*6.28,vr:-.1+Math.random()*.2,c:cols[Math.floor(Math.random()*cols.length)],g:Math.random()<.3?glyphs[Math.floor(Math.random()*4)]:null,s:6+Math.random()*7}));
+    let f=0;
+    (function tick(){
+      ctx.clearRect(0,0,W,H);
+      ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.r+=p.vr; ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;
+        if(p.g){ctx.font="bold 20px monospace";ctx.fillText(p.g,0,0);} else ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);
+        ctx.restore();});
+      if(++f<220) requestAnimationFrame(tick); else {ctx.clearRect(0,0,W,H); cv.hidden=true;}
+    })();
+  }
+
+  buildMatch(); buildSnips(); buildBugs(); buildShorts();
+
+  /* ===== answer-key mode ===== */
+  if(KEY){
+    pics.forEach(q=>{ picsBox.querySelector(`.pic[data-id="${q.id}"] button[data-v="${q.a}"]`).click(); });
+    snipsBox.querySelectorAll(".tok").forEach(t=>t.dataset.paint=t.dataset.role);
+    bugs.forEach((b,i)=>{ document.getElementById(`bug${i}o${b.c}`).checked=true; });
+    shorts.forEach((q,i)=>{ document.getElementById(`short${i}`).value=q.answer; });
+    document.getElementById("checkBtn").click();
+    document.querySelector(".actions").hidden=true;
+    result.hidden=true;
+    document.querySelectorAll(".how").forEach(h=>h.hidden=true);
+    document.querySelectorAll(".sec-score").forEach(x=>x.hidden=true);
+    document.querySelector(".lede").hidden=false;
+    document.querySelector(".lede").innerHTML='<span class="key-note">نموذج الإجابة — للمعلمة</span> كل الإجابات الصحيحة معلّمة بالأخضر، ومعها التصحيح لكل سؤال.';
+    document.querySelector("h1").insertAdjacentHTML("afterbegin","نموذج إجابة ");
+    window.scrollTo({top:0});
+  }
+})();
+</script>
